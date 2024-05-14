@@ -10,5 +10,5 @@ curl -sSL https://raw.githubusercontent.com/KazamiHazaki/easier-life/main/minera
 
 Multiple with docker 
 ```bash
-curl -sSL https://raw.githubusercontent.com/KazamiHazaki/easier-life/main/docker/mineral-docker.sh | bash
+wget -O mineral-docker.sh https://raw.githubusercontent.com/KazamiHazaki/easier-life/main/docker/mineral-docker.sh && chmod +x mineral-docker.sh && ./mineral-docker.sh
 ```
