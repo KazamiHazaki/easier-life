@@ -16,5 +16,5 @@ wget -O mineral-docker.sh https://raw.githubusercontent.com/KazamiHazaki/easier-
 
 Run Aztec-Sequencer 
 ```bash
-curl -sSL https://raw.githubusercontent.com/KazamiHazaki/easier-life/refs/heads/main/aztec-sequencer.sh && bash aztec-sequencer.sh
+curl -fsSL https://raw.githubusercontent.com/KazamiHazaki/easier-life/refs/heads/main/aztec-sequencer.sh -o aztec-sequencer.sh && bash aztec-sequencer.sh
 ```
