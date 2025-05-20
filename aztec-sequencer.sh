@@ -83,36 +83,45 @@ echo "✅ docker-compose.yaml updated."
 docker compose -f "$YAML_PATH" up -d
 echo "🚀 aztec-sequencer starting..."
 
-# Wait until the container is healthy
-echo "⏳ Waiting for aztec-sequencer container to become healthy..."
-for i in {1..30}; do
-  STATUS=$(docker inspect --format='{{.State.Health.Status}}' aztec-sequencer 2>/dev/null)
-  echo "🔁 Status: $STATUS"
-  if [ "$STATUS" == "healthy" ]; then
-    echo "✅ Container is healthy!"
-    break
-  fi
-  sleep 5
-done
+echo "Copy this to Check Node Sync "
+echo "NODE_SYNC=$(curl -s -X POST -H 'Content-Type: application/json' \
+   -d '{"jsonrpc":"2.0","method":"node_getL2Tips","params":[],"id":67}' \
+   http://localhost:8080 | jq -r ".result.proven.number")"
 
-if [ "$STATUS" != "healthy" ]; then
-  echo "❌ Container did not become healthy in time. Exiting."
-  exit 1
-fi
+echo "Copy this to Print Proof" 
+echo "ARCHIVE_RESULT=$(curl -s -X POST -H 'Content-Type: application/json' \
+   -d "{\"jsonrpc\":\"2.0\",\"method\":\"node_getArchiveSiblingPath\",\"params\":[\"$NODE_SYNC\",\"$NODE_SYNC\"],\"id\":67}" \
+   http://localhost:8080 | jq -r ".result")"
+# # Wait until the container is healthy
+# echo "⏳ Waiting for aztec-sequencer container to become healthy..."
+# for i in {1..30}; do
+#   STATUS=$(docker inspect --format='{{.State.Health.Status}}' aztec-sequencer 2>/dev/null)
+#   echo "🔁 Status: $STATUS"
+#   if [ "$STATUS" == "healthy" ]; then
+#     echo "✅ Container is healthy!"
+#     break
+#   fi
+#   sleep 5
+# done
 
-# Once healthy, make the JSON-RPC calls
-GREEN='\033[0;32m'
-NC='\033[0m'
+# if [ "$STATUS" != "healthy" ]; then
+#   echo "❌ Container did not become healthy in time. Exiting."
+#   exit 1
+# fi
 
-NODE_SYNC=$(curl -s -X POST -H 'Content-Type: application/json' \
-  -d '{"jsonrpc":"2.0","method":"node_getL2Tips","params":[],"id":67}' \
-  http://localhost:8080 | jq -r ".result.proven.number")
+# # Once healthy, make the JSON-RPC calls
+# GREEN='\033[0;32m'
+# NC='\033[0m'
 
-echo -e "${GREEN}Synced Proven Number: $NODE_SYNC${NC}"
+# NODE_SYNC=$(curl -s -X POST -H 'Content-Type: application/json' \
+#   -d '{"jsonrpc":"2.0","method":"node_getL2Tips","params":[],"id":67}' \
+#   http://localhost:8080 | jq -r ".result.proven.number")
 
-ARCHIVE_RESULT=$(curl -s -X POST -H 'Content-Type: application/json' \
-  -d "{\"jsonrpc\":\"2.0\",\"method\":\"node_getArchiveSiblingPath\",\"params\":[\"$NODE_SYNC\",\"$NODE_SYNC\"],\"id\":67}" \
-  http://localhost:8080 | jq -r ".result")
+# echo -e "${GREEN}Synced Proven Number: $NODE_SYNC${NC}"
 
-echo -e "${GREEN}Archive Sibling Path Result:${NC}"
-echo -e "${GREEN}$ARCHIVE_RESULT${NC}"
+# ARCHIVE_RESULT=$(curl -s -X POST -H 'Content-Type: application/json' \
+#   -d "{\"jsonrpc\":\"2.0\",\"method\":\"node_getArchiveSiblingPath\",\"params\":[\"$NODE_SYNC\",\"$NODE_SYNC\"],\"id\":67}" \
+#   http://localhost:8080 | jq -r ".result")
+
+# echo -e "${GREEN}Archive Sibling Path Result:${NC}"
+# echo -e "${GREEN}$ARCHIVE_RESULT${NC}"
