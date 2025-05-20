@@ -68,6 +68,12 @@ services:
       - 8080:8080
     volumes:
       - ./data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-s", "-X", "POST", "-H", "Content-Type: application/json", "--data", '{"jsonrpc":"2.0","method":"node_getNodeInfo","params":[],"id":1}', "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
 EOF
   echo "✅ Created default docker-compose.yaml"
 fi
