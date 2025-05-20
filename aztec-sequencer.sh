@@ -13,6 +13,9 @@ if [[ ! $PRIVATE_KEY =~ ^0x[a-fA-F0-9]{64}$ ]]; then
 fi
 
 read -p "Enter new Coinbase Wallet Address: " WALLET_ADDR
+ETHEREUM_HOSTS_ESCAPED=$(printf '%s' "$ETHEREUM_HOSTS" | sed 's/&/\\&/g')
+L1_CONSENSUS_HOST_URL_ESCAPED=$(printf '%s' "$L1_CONSENSUS_HOST_URL" | sed 's/&/\\&/g')
+
 
 P2P_IP=$(curl -4 -s ifconfig.me)
 if [ -z "$P2P_IP" ]; then
@@ -40,7 +43,6 @@ services:
     container_name: aztec-sequencer
     restart: always
     image: aztecprotocol/aztec:alpha-testnet
-#    network_mode: host
     environment:
       DATA_DIRECTORY: /data
       ETHEREUM_HOSTS: ""
@@ -68,8 +70,8 @@ EOF
 fi
 
 sed -i \
-  -e "s|ETHEREUM_HOSTS:.*|ETHEREUM_HOSTS: \"$ETHEREUM_HOSTS\"|" \
-  -e "s|L1_CONSENSUS_HOST_URLS:.*|L1_CONSENSUS_HOST_URLS: \"$L1_CONSENSUS_HOST_URL\"|" \
+  -e "s|ETHEREUM_HOSTS:.*|ETHEREUM_HOSTS: \"$ETHEREUM_HOSTS_ESCAPED\"|" \
+  -e "s|L1_CONSENSUS_HOST_URLS:.*|L1_CONSENSUS_HOST_URLS: \"$L1_CONSENSUS_HOST_URL_ESCAPED\"|" \
   -e "s|VALIDATOR_PRIVATE_KEY:.*|VALIDATOR_PRIVATE_KEY: ${PRIVATE_KEY}|" \
   -e "s|COINBASE:.*|COINBASE: ${WALLET_ADDR}|" \
   -e "s|P2P_IP:.*|P2P_IP: ${P2P_IP}|" \
