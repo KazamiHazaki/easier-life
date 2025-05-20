@@ -12,3 +12,9 @@ Multiple with docker
 ```bash
 wget -O mineral-docker.sh https://raw.githubusercontent.com/KazamiHazaki/easier-life/main/docker/mineral-docker.sh && chmod +x mineral-docker.sh && ./mineral-docker.sh
 ```
+
+
+Run Aztec-Sequencer 
+```bash
+curl -sSL https://raw.githubusercontent.com/KazamiHazaki/easier-life/refs/heads/main/aztec-sequencer.sh | bash
+```
