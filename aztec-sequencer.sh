@@ -83,15 +83,25 @@ echo "✅ docker-compose.yaml updated."
 docker compose -f "$YAML_PATH" up -d
 echo "🚀 aztec-sequencer starting..."
 
-echo "Copy this to Check Node Sync "
-echo "NODE_SYNC=$(curl -s -X POST -H 'Content-Type: application/json' \
-   -d '{"jsonrpc":"2.0","method":"node_getL2Tips","params":[],"id":67}' \
-   http://localhost:8080 | jq -r ".result.proven.number")"
+echo "======= STEP 1: Get Node Sync ======="
+echo "Copy and paste the following command to get the current L2 proven number:"
+echo ''
+echo 'NODE_SYNC=$(curl -s -X POST -H '\''Content-Type: application/json'\'' \'
+echo '  -d '\''{"jsonrpc":"2.0","method":"node_getL2Tips","params":[],"id":67}'\'' \'
+echo '  http://localhost:8080 | jq -r ".result.proven.number")'
+echo ''
+echo 'echo "Proven Number: $NODE_SYNC"'
+echo ""
 
-echo "Copy this to Print Proof" 
-echo "ARCHIVE_RESULT=$(curl -s -X POST -H 'Content-Type: application/json' \
-   -d "{\"jsonrpc\":\"2.0\",\"method\":\"node_getArchiveSiblingPath\",\"params\":[\"$NODE_SYNC\",\"$NODE_SYNC\"],\"id\":67}" \
-   http://localhost:8080 | jq -r ".result")"
+echo "======= STEP 2: Get Archive Proof ======="
+echo "After running the above, copy and paste this command to get the archive sibling path:"
+echo ''
+echo 'ARCHIVE_RESULT=$(curl -s -X POST -H '\''Content-Type: application/json'\'' \'
+echo '  -d "{\"jsonrpc\":\"2.0\",\"method\":\"node_getArchiveSiblingPath\",\"params\":[\"$NODE_SYNC\",\"$NODE_SYNC\"],\"id\":67}" \'
+echo '  http://localhost:8080 | jq -r ".result")'
+echo ''
+echo 'echo "Proof Result: $ARCHIVE_RESULT"'
+
 # # Wait until the container is healthy
 # echo "⏳ Waiting for aztec-sequencer container to become healthy..."
 # for i in {1..30}; do
